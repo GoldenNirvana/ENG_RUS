@@ -18,7 +18,7 @@ bool Dictionary::insert(const std::string &word, const std::string &translate)
   return true;
 }
 
-const_map_iter &Dictionary::search(const std::string &word) const
+const_map_iter Dictionary::search(const std::string &word) const
 {
 
 }
