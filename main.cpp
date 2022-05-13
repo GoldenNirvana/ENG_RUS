@@ -14,7 +14,7 @@ int main()
 
   dictionary.printDictionary(std::cout);
 
-  std::cout << dictionary.findWord('d');
+//  std::cout << dictionary.findWord('d');
 
   return 0;
 }
