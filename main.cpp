@@ -6,6 +6,7 @@ int main()
   try
   {
     Dictionary dictionary;
+
     dictionary.insert("cat", "кошка");
     dictionary.insert("cat", "кошечка");
     dictionary.insert("cat", "киса");
