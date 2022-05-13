@@ -14,8 +14,6 @@ int main()
     dictionary.insert("dog", "псина");
     dictionary.insert("dog", "собачка");
 
-    dicl
-
     dictionary.printDictionary(std::cout);
 
 //  std::cout << dictionary.findWord('d');
