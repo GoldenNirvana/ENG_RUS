@@ -6,19 +6,13 @@
 #include <memory>
 #include <ostream>
 
-using map_iter = std::map<std::string, std::unique_ptr<std::set<std::string>>>::iterator;
-using const_map_iter = std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator;
-
-using set_iter = std::set<std::string>::iterator;
-using const_set_iter = std::set<std::string>::const_iterator;
-
 class Dictionary
 {
 public:
   Dictionary() = default;
 
   bool insert(const std::string &word, const std::string &translate);
-  const_map_iter search(const std::string &word) const;
+  std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator search(const std::string &word) const;
   bool deleteWord(const std::string &word);
 
   void printDictionary(std::ostream &out);
@@ -26,7 +20,8 @@ public:
   size_t size();
   const std::string &findWord(char letter) const;
   void addWordsFromAnotherDictionary(const Dictionary &dictionary);
-  // todo 6?
+  // todo 6? тут у меня вопрос как вообще должен работать послдедний метод
+  // (у нас вроде и так слрварь из уникальных слов только)
 
 private:
   std::map<std::string, std::unique_ptr<std::set<std::string>>> dictionary_;

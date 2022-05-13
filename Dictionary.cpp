@@ -16,11 +16,13 @@ bool Dictionary::insert(const std::string &word, const std::string &translate)
   std::pair<std::string, std::unique_ptr<std::set<std::string>>> pair = std::make_pair(word, std::move(ptr));
   dictionary_.insert(std::move(pair));
   return true;
+  //todo возможно стоит сделать метод void, раз мапа сама отбрасывает повторяющие элементы и не смысла возвращать true
 }
 
-const_map_iter Dictionary::search(const std::string &word) const
+std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator
+Dictionary::search(const std::string &word) const
 {
-
+  //todo уверен ты справишься
 }
 
 bool Dictionary::deleteWord(const std::string &word)
@@ -45,7 +47,7 @@ void Dictionary::printDictionary(std::ostream &out)
 
 void Dictionary::printByOrder(std::ostream &out)
 {
-  // todo
+  // todo сначала надо придумать что значит по порядку вообще
 }
 
 size_t Dictionary::size()
@@ -66,7 +68,7 @@ const std::string &Dictionary::findWord(char letter) const
 
 void Dictionary::addWordsFromAnotherDictionary(const Dictionary &dictionary)
 {
-
+ // todo эта штука тоже не сложная должна быть, раз stl юзаем, (мне было лень её писать пока, но думаю тут как и везде легко)
 }
 
 
