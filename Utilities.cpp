@@ -37,33 +37,30 @@ std::ostream &operator<<(std::ostream &out, std::set<std::string> &set)
 //  temp.insert(item);
 //}
 
-//ДЕЛАТЬ ДЛЯ 2 ПЕРВЫХ СЛОВАРЬ ОТДЕЛЬНО, А ПОТОМ ПЕРЕДАВАТЬ 1 СЛЕДУЮЩИЙ И ПОСТЕПЕННО ФОРМИРУЮЩИЙСЯ ОБЩИЙ СЛОВАРЬ
-//НУЖНА ДРУГАЯ Функция после первого и второго словаря
 Dictionary commonDictionary(std::vector<Dictionary> &common)
 {
   Dictionary result;
-  for (const auto &item: common[0])
-  {
-    result.insert(item);
-  }
+  bool isCommon = false;
 
-  for (const auto &item: common)       // Идём по всем словарям
+  for (const auto &dictionary: common)       // Идём по всем словарям
   {
-    for (const auto &item1: item)        // Идём по всем словам одного словаря
+    for (const auto &pair: dictionary)        // Берём каждое слово в словаре
     {
-      if (result.search(item1.first) ==
-          result.end())   // Если этого слова нет в начальном словаре -> слова не повторяются -> удаляем
+      for (const auto &item: common)        // С текущим словом опять идём по всем словарям
       {
-        result.deleteWord(item1.first);
+        isCommon = true;
+        if (item.search(pair.first) == item.end()) // Проверяем его наличие во всех остальных
+        {
+          isCommon = false;                   // Если хотя бы в одном словаре его нет -> слово не уникальное и его не будет добавлять в Result
+          break;
+        }
       }
-      else
+      if (isCommon)         // если во всех нашлось это слово -> isCommon останется true и мы слово добавим в result
       {
-        // тут получается что слово есть во всех словарях до текущего включительно,
-        // и ты тут что-то хотела сделать с переводами, но я не очень понял что
+        result.insert(pair);
       }
     }
   }
-
   return result;
 }
 

@@ -6,17 +6,17 @@
 #include <memory>
 #include <ostream>
 
-using Item = std::pair<const std::string, std::unique_ptr<std::set<std::string>>>;
+using Item = std::pair<const std::string, std::shared_ptr<std::set<std::string>>>;
 
 
 class Dictionary
 {
 public:
   Dictionary() = default;
-  const std::map<std::string, std::unique_ptr<std::set<std::string>>>& getDictionary() const;
+  const std::map<std::string, std::shared_ptr<std::set<std::string>>>& getDictionary() const;
   bool insert(const std::string &word, const std::string &translate);
   bool insert(const Item &item);
-  std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator search(const std::string &word) const;
+  std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator search(const std::string &word) const;
   bool deleteWord(const std::string &word);
 
   void printDictionary(std::ostream &out);
@@ -25,11 +25,11 @@ public:
   const std::string &findWord(char letter) const;
   void addWordsFromAnother(const Dictionary &dictionary);
 
-  std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator begin() const;
-  std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator end() const;
+  std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator begin() const;
+  std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator end() const;
 
 private:
-  std::map<std::string, std::unique_ptr<std::set<std::string>>> dictionary_;
+  std::map<std::string, std::shared_ptr<std::set<std::string>>> dictionary_;
 };
 
 

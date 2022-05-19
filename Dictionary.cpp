@@ -12,10 +12,10 @@ bool Dictionary::insert(const std::string &word, const std::string &translate)
     return true;
   }
   std::set<std::string> set;
-  std::unique_ptr<std::set<std::string>> ptr = std::make_unique<std::set<std::string>>(set);
+  std::shared_ptr<std::set<std::string>> ptr = std::make_shared<std::set<std::string>>(set);
   ptr->insert(translate);
-  Item pair = std::make_pair(word, std::move(ptr));
-  dictionary_.insert(std::move(pair));
+  Item pair = std::make_pair(word, ptr);
+  dictionary_.insert(pair);
   return true;
 }
 
@@ -28,7 +28,7 @@ bool Dictionary::insert(const Item &item)
   return true;
 }
 
-std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator
+std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator
 Dictionary::search(const std::string &word) const
 {
   return dictionary_.find(word);
@@ -81,16 +81,16 @@ void Dictionary::addWordsFromAnother(const Dictionary& dictionary)
   }
 }
 
-const std::map<std::string, std::unique_ptr<std::set<std::string>>> &Dictionary::getDictionary() const
+const std::map<std::string, std::shared_ptr<std::set<std::string>>> &Dictionary::getDictionary() const
 {
   return dictionary_;
 }
-std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator Dictionary::begin() const
+std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator Dictionary::begin() const
 {
   return dictionary_.begin();
 }
 
-std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator Dictionary::end() const
+std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator Dictionary::end() const
 {
   return dictionary_.end();
 }
