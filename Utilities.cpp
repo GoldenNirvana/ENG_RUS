@@ -11,53 +11,64 @@ std::ostream &operator<<(std::ostream &out, std::set<std::string> &set)
   return out;
 }
 
-//СДЕЛАТЬ ИНТЕРФЕЙС И ДОБАВЛЕНИЕ СЛОВ ИЗ ПОТОКА!
-
-//ХОЧУ ПЕРЕДАТЬ СЮДА ИТЕРАТОРЫ НА ПАРУ, НА ДАННОЕ СЛОВО В ОБОИХ СЛОВАРЯХ. ДЛЯ КАЖДОГО ЕГО ПЕРЕВОДА ИЗ ПЕРВОГО
-//СЛОВАРЯ ДЕЛАЕМ FOR В FOR И ПРОВЕРЯЕМ, ЯВЛЯЮТСЯ ЛИ ПЕРЕВОДЫ ОДИНАКОВЫМИ.
-//ЕСЛИ ТАК, ВСТАВЛЯЕМ В SET ДЛЯ МОЕГО СЛОВА ДАННЫЙ ПЕРЕВОД
-//bool compareTranslates(std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator curr,
-//                       Item& item, Dictionary& temp)
-//{
-//  for (const auto &temp2: curr->second)
-//  {
-//    if
-//  }
-//}
-
-//Dictionary doCompare(const Dictionary &curr, const Dictionary &next, Dictionary &temp)
-//{
-//  for (const Item &item: next)
-//  {
-//    if (curr.search(item.first) == curr.end())
-//    {
-//      compareTranslates(*curr.search(item.first), item, temp);
-//    }
-//  }
-//  temp.insert(item);
-//}
-
 Dictionary commonDictionary(std::vector<Dictionary> &common)
 {
   Dictionary result;
-  bool isCommon = false;
+  bool isCommon;
+
+  std::map<std::string, size_t> translates; // перевод и кол-во раз которое встретилось этого перевода
 
   for (const auto &dictionary: common)       // Идём по всем словарям
   {
     for (const auto &pair: dictionary)        // Берём каждое слово в словаре
     {
-      for (const auto &item: common)        // С текущим словом опять идём по всем словарям
+      if (result.search(pair.first) != result.end())
       {
-        isCommon = true;
-        if (item.search(pair.first) == item.end()) // Проверяем его наличие во всех остальных
+        continue;
+      }
+      isCommon = true;
+      translates.clear();
+      for (const auto &dictionarySecond: common)        // С текущим словом опять идём по всем словарям
+      {
+        if (dictionarySecond.search(pair.first) == dictionarySecond.end()) // Проверяем его наличие во всех остальных
         {
           isCommon = false;                   // Если хотя бы в одном словаре его нет -> слово не уникальное и его не будет добавлять в Result
           break;
         }
+        else
+        {
+          Item item = *dictionarySecond.search(
+            pair.first); // находим set в котором все переводы этого слова в данном словаре
+          for (const auto &word: *item.second)   // вставляем все эти слова в наши переводы
+          {
+            translates[word]++;
+          }
+        }
       }
       if (isCommon)         // если во всех нашлось это слово -> isCommon останется true и мы слово добавим в result
       {
-        result.insert(pair);
+        std::set<std::string> set; // set в котором будут только общие слова
+        for (const auto &translate: translates)
+        {
+          if (translate.second == common.size())
+          {
+            set.insert(translate.first);
+          }
+        }
+        if (set.empty()) // Тут будем давать написать перевод если не встретилось ни одного общего
+        {
+          std::cout << "Write translate for " + pair.first << '\n';
+          std::cout << "Write \"Exit\" to escape\n";
+          std::string in;
+          std::cin >> in;
+          while (in != "Exit")
+          {
+            set.insert(in);
+            std::cin >> in;
+          }
+        }
+        std::shared_ptr<std::set<std::string>> sharedPtr = std::make_shared<std::set<std::string>>(set);
+        result.insert({pair.first, sharedPtr});
       }
     }
   }

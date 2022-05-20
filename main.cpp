@@ -9,36 +9,34 @@ int main()
   try
   {
     Dictionary dictionary;
-    dictionary.insert("cat", "кошка");
-    dictionary.insert("field", "поле");
-    dictionary.insert("car", "машина");
-    dictionary.insert("house", "здание");
-    dictionary.insert("dog", "псина");
-    dictionary.insert("cat", "кисонька");
-    dictionary.insert("cat", "кот");
-    dictionary.insert("road", "путь");
-    dictionary.insert("house", "дом");
-    dictionary.insert("road", "дорога");
-
-
     Dictionary dictionary1;
-    dictionary1.insert("dog", "собачка");
+    Dictionary dictionary2;
+
+    dictionary.insert("Cat", "Кошка");
+    dictionary.insert("Cat", "Киса");
+    dictionary.insert("Dog", "Собака");
+    dictionary.insert("A", "AT");
+
+    dictionary1.insert("Cat", "Киса");
+    dictionary1.insert("Cat", "Кошка");
+    dictionary1.insert("Cat", "Кисонька");
+    dictionary1.insert("Dog", "Собака");
+    dictionary1.insert("B", "BT");
+
+    dictionary2.insert("Cat", "Кошка");
+    dictionary2.insert("Cat", "Котя");
+    dictionary2.insert("Cat", "Киса");
+    dictionary2.insert("Dog", "Собака");
+    dictionary2.insert("C", "CT");
 
 
     std::vector<Dictionary> base;
     base.push_back(dictionary);
     base.push_back(dictionary1);
+    base.push_back(dictionary2);
 
-    Dictionary dictionary2 = commonDictionary(base);
-    Dictionary dictionary3 = makeFromUniqueWords(dictionary, dictionary2);
-    int count = 5;
-//    std::cin >> count;
-//    int index = 0;
-//    std::vector<Dictionary> myDictionary;
-//    while (count--)
-//    {
-//      myDictionary.push_back(std::move(base[index++]));
-//    }
+    commonDictionary(base).printDictionary(std::cout);
+
   }
   catch (const std::exception &e)
   {

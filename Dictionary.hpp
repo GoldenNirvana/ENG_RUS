@@ -20,7 +20,6 @@ public:
   bool deleteWord(const std::string &word);
 
   void printDictionary(std::ostream &out);
-  void printByOrder(std::ostream &out);
   size_t size();
   const std::string &findWord(char letter) const;
   void addWordsFromAnother(const Dictionary &dictionary);
