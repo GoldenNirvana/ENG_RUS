@@ -18,14 +18,16 @@ int main()
     dictionary.insert("A", "AT");
 
     dictionary1.insert("Cat", "Киса");
+    dictionary1.insert("Cat", "Кошка");
     dictionary1.insert("Cat", "Кисонька");
     dictionary1.insert("Dog", "Собака");
     dictionary1.insert("B", "BT");
 
-    dictionary2.insert("Cat","Котя");
-    dictionary2.insert("Cat","Киса");
+    dictionary2.insert("Cat", "Кошка");
+    dictionary2.insert("Cat", "Котя");
+    dictionary2.insert("Cat", "Киса");
     dictionary2.insert("Dog", "Собака");
-    dictionary2.insert("C","CT");
+    dictionary2.insert("C", "CT");
 
 
     std::vector<Dictionary> base;
@@ -33,8 +35,7 @@ int main()
     base.push_back(dictionary1);
     base.push_back(dictionary2);
 
-    Dictionary dict = commonDictionary(base);
-    dict.printDictionary(std::cout);
+    commonDictionary(base).printDictionary(std::cout);
 
   }
   catch (const std::exception &e)
