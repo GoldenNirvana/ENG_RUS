@@ -6,37 +6,18 @@
 
 int main()
 {
+  system("chcp 65001");
+  shkroba::Dictionary d1;
+  shkroba::Dictionary d2;
+  shkroba::Dictionary d3;
+  shkroba::Dictionary d4;
+  shkroba::Dictionary d5;
+
   try
   {
-    Dictionary dictionary;
-    Dictionary dictionary1;
-    Dictionary dictionary2;
-
-    dictionary.insert("Cat", "Кошка");
-    dictionary.insert("Cat", "Киса");
-    dictionary.insert("Dog", "Собака");
-    dictionary.insert("A", "AT");
-
-    dictionary1.insert("Cat", "Киса");
-    dictionary1.insert("Cat", "Кошка");
-    dictionary1.insert("Cat", "Кисонька");
-    dictionary1.insert("Dog", "Собака");
-    dictionary1.insert("B", "BT");
-
-    dictionary2.insert("Cat", "Кошка");
-    dictionary2.insert("Cat", "Котя");
-    dictionary2.insert("Cat", "Киса");
-    dictionary2.insert("Dog", "Собака");
-    dictionary2.insert("C", "CT");
-
-
-    std::vector<Dictionary> base;
-    base.push_back(dictionary);
-    base.push_back(dictionary1);
-    base.push_back(dictionary2);
-
-    commonDictionary(base).printDictionary(std::cout);
-
+    shkroba::createTestDictionaries(d1, d2,d3, d4,d5);
+    shkroba::testCommandSystem(d1, d2, d3, d4, d5);
+//    shkroba::help(std::cout);
   }
   catch (const std::exception &e)
   {
