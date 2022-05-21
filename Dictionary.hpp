@@ -6,30 +6,32 @@
 #include <memory>
 #include <ostream>
 
-using Item = std::pair<const std::string, std::shared_ptr<std::set<std::string>>>;
-
-
-class Dictionary
+namespace shkroba
 {
-public:
-  Dictionary() = default;
-  const std::map<std::string, std::shared_ptr<std::set<std::string>>>& getDictionary() const;
-  bool insert(const std::string &word, const std::string &translate);
-  bool insert(const Item &item);
-  std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator search(const std::string &word) const;
-  bool deleteWord(const std::string &word);
+  using pairER = std::pair< const std::string, std::shared_ptr< std::set< std::string > > >;
 
-  void printDictionary(std::ostream &out);
-  size_t size();
-  const std::string &findWord(char letter) const;
-  void addWordsFromAnother(const Dictionary &dictionary);
+  class Dictionary
+  {
+  public:
+    Dictionary() = default;
+    void insert(const std::string &word, const std::string &translate);
+    void insert(const pairER &item);
 
-  std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator begin() const;
-  std::map<std::string, std::shared_ptr<std::set<std::string>>>::const_iterator end() const;
+    std::map< std::string, std::shared_ptr< std::set< std::string>> >::const_iterator
+    search(const std::string &word) const;
 
-private:
-  std::map<std::string, std::shared_ptr<std::set<std::string>>> dictionary_;
-};
+    bool deleteWord(const std::string &word);
+    void printDictionary(std::ostream &out) const;
+    size_t size() const;
+    void findWord(char letter, std::ostream& out) const;
+    void addWordsFromAnother(const Dictionary &dictionary);
 
+    std::map< std::string, std::shared_ptr< std::set< std::string > > >::const_iterator begin() const;
+    std::map< std::string, std::shared_ptr< std::set< std::string > > >::const_iterator end() const;
+
+  private:
+    std::map< std::string, std::shared_ptr< std::set< std::string > > > dictionary_;
+  };
+}
 
 #endif
