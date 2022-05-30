@@ -6,18 +6,24 @@
 
 int main()
 {
-  system("chcp 65001");
-  shkroba::Dictionary d1;
-  shkroba::Dictionary d2;
-  shkroba::Dictionary d3;
-  shkroba::Dictionary d4;
-  shkroba::Dictionary d5;
+//  shkroba::Dictionary d1("d1");
+//  shkroba::Dictionary d2("d2");
+//  shkroba::Dictionary d3("d3");
+//  shkroba::Dictionary d4("d4");
+//  shkroba::Dictionary d5("d5");
+
+  std::ifstream fin("in.txt");
+  std::vector<shkroba::Dictionary> vector = shkroba::createDictionariesFromFile(fin);
+  for (const auto &item: vector)
+  {
+    item.printDictionary(std::cout);
+  }
+  int test = 1;
 
   try
   {
-    shkroba::createTestDictionaries(d1, d2,d3, d4,d5);
-    shkroba::testCommandSystem(d1, d2, d3, d4, d5);
-//    shkroba::help(std::cout);
+    // shkroba::createTestDictionaries(d1, d2, d3, d4, d5);
+    //shkroba::testCommandSystem(d1, d2, d3, d4, d5);
   }
   catch (const std::exception &e)
   {

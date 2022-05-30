@@ -25,6 +25,8 @@ namespace shkroba
   void createTestDictionaries(Dictionary& d1, Dictionary& d2, Dictionary& d3, Dictionary& d4, Dictionary& d5);
   void testCommandSystem(Dictionary&  d1, Dictionary&  d2, Dictionary&  d3, Dictionary&  d4, Dictionary&  d5);
 
+  std::string nextWord(std::string &str);
+  std::vector<Dictionary> createDictionariesFromFile(std::istream &fin);
 }
 #endif
 

@@ -4,6 +4,11 @@
 
 namespace shkroba
 {
+  Dictionary::Dictionary(const std::string &name)
+  {
+    name_ = name;
+  }
+
   void Dictionary::insert(const std::string &word, const std::string &translate)
   {
     auto iterator = dictionary_.find(word);
@@ -48,6 +53,7 @@ namespace shkroba
 
   void Dictionary::printDictionary(std::ostream &out) const
   {
+    out << name_ << '\n';
     for (auto &item: dictionary_)
     {
       out << item.first << ' ' << '-' << ' ' << *item.second;
@@ -70,7 +76,7 @@ namespace shkroba
       }
     }
 
-    for (auto & iter : result)
+    for (auto &iter: result)
     {
       out << iter << ' ';
     }
@@ -100,149 +106,45 @@ namespace shkroba
   {
     return dictionary_.end();
   }
+
+  std::istream &operator>>(std::istream &in, Dictionary &dictionary)
+  {
+    std::string newLine;
+    std::getline(in, newLine, '\n');
+    std::string name = nextWord(newLine);
+    dictionary.name_ = name;
+    std::string word;
+    std::set<std::string> set;
+    while (!in.eof())
+    {
+      std::getline(in, newLine, '\n');
+      word = nextWord(newLine);
+      if (word.empty())
+      {
+        return in;
+      }
+      while (!newLine.empty())
+      {
+        std::string translate = nextWord(newLine);
+        set.insert(translate);
+      }
+      std::shared_ptr<std::set<std::string> > ptr = std::make_shared<std::set<std::string> >(set);
+      pairER pair = std::make_pair(word, ptr);
+      dictionary.insert(pair);
+      set.clear();
+    }
+    return in;
+  }
+
+  void Dictionary::rename(const std::string &newName)
+  {
+    name_ = newName;
+  }
+
+  std::string Dictionary::getName() const
+  {
+    return name_;
+  }
+
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*#include "Dictionary.hpp"
-#include <iterator>
-#include <algorithm>
-#include "Utilities.hpp"
-
-bool Dictionary::insert(const std::string& word, const std::string& translate)
-{
-  auto iterator = dictionary_.find(word);
-  if (iterator != dictionary_.end())
-  {
-    iterator->second->insert(translate);
-    return true;
-  }
-  std::set<std::string> set;
-  std::unique_ptr<std::set<std::string>> ptr = std::make_unique<std::set<std::string>>(set);
-  ptr->insert(translate);
-  // set.insert(translate); ������
-  std::pair<std::string, std::unique_ptr<std::set<std::string>>> pair = std::make_pair(word, std::move(ptr));
-  dictionary_.insert(std::move(pair));
-  return true;
-  //todo �������� ����� ������� ����� void, ��� ���� ���� ����������� ����������� �������� � �� ������ ���������� true
-}
-
-std::map<std::string, std::unique_ptr<std::set<std::string>>>::const_iterator
-Dictionary::search(const std::string& word) const
-{
-  return dictionary_.find(word);
-}
-
-bool Dictionary::deleteWord(const std::string& word)
-{
-  auto iter = dictionary_.find(word);
-  if (iter != dictionary_.end())
-  {
-    dictionary_.erase(word);
-    return true;
-  }
-  return false;
-}
-
-void Dictionary::printDictionary(std::ostream& out)
-{
-  for (auto& item : dictionary_)
-  {
-    out << item.first << '\n';
-    out << *item.second;
-  }
-}
-
-//void Dictionary::printByOrder(std::ostream& out)
-//{
-//  std::sort(dictionary_.begin(), dictionary_.end());
-//  printDictionary(out);
-//}
-
-size_t Dictionary::size()
-{
-  return dictionary_.size();
-}
-
-const std::string& Dictionary::findWord(char letter,std::ostream& out) const
-{
-  for (auto& item : dictionary_)
-  {
-    if (item.first[0] == letter)
-    {
-      out << item.first;
-    }
-  }
-}
-
-void Dictionary::printWithUniqueTranslate(std::ostream& out) const
-{
-  for (auto &item: dictionary_)
-  {
-    if(item.second->size() == 1)
-    {
-      out << item.first;
-    }
-  }
-}
-
-
-void Dictionary::addWordsFromAnother(const Dictionary& dictionary)
-{
-  for (auto &word: dictionary.dictionary_)
-  {
-    for (const auto &translate: *word.second)
-    {
-      this->insert(word.first, translate);
-    }
-  }
-}
-
-*//*
-const std::map<std::string, std::unique_ptr<std::set<std::string>>> &Dictionary::getDictionary() const
-{
-  return dictionary_;
-}
-
-bool Dictionary::insert(myItem& item)
-{
-  for (const auto &translate: *item.second)
-  {
-    this->insert(item.first, translate);
-  }
-}
-*/

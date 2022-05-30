@@ -16,7 +16,7 @@ namespace shkroba
 
   Dictionary createCommonDictionary(std::vector<Dictionary> &common)
   {
-    Dictionary result;
+    Dictionary result("result");
     bool isCommon;
 
     std::map<std::string, size_t> translates; // перевод и кол-во раз которое встретилось этого перевода
@@ -96,7 +96,7 @@ namespace shkroba
 
   Dictionary createFromUniqueWords(const Dictionary &d1, const Dictionary &d2)
   {
-    Dictionary common;
+    Dictionary common("common");
     for (const pairER &item: d1)
     {
       if (d2.search(item.first) == d2.end())
@@ -116,7 +116,7 @@ namespace shkroba
 
   Dictionary createFromOneTranslate(const Dictionary &dictionary)
   {
-    Dictionary newDictionary;
+    Dictionary newDictionary("newDict");
     for (const auto &word: dictionary)
     {
       if (word.second->size() == 1)
@@ -276,4 +276,37 @@ namespace shkroba
 
   }
 
+  std::string nextWord(std::string &str)
+  {
+    std::string word = str.substr(0, str.find_first_of(' '));
+    if (str.find_first_of(' ') == -1)
+    {
+      if (word[word.size() - 1] == '\r')
+      {
+        word = word.substr(0, word.size() - 1);
+      }
+//      word = word.substr();
+      str.clear();
+    }
+    else
+    {
+      str.erase(0, str.find_first_of(' ') + 1);
+    }
+    return word;
+  }
+
+  std::vector<Dictionary> createDictionariesFromFile(std::istream &in)
+  {
+    std::vector<Dictionary> resultVector;
+    while (!in.eof())
+    {
+      Dictionary dictionary;
+      in >> dictionary;
+      if (!dictionary.getName().empty())
+      {
+        resultVector.push_back(dictionary);
+      }
+    }
+    return resultVector;
+  }
 }
