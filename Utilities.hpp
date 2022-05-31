@@ -1,33 +1,26 @@
 #ifndef RGR_ENG_RUS_UTILITIES_HPP
 #define RGR_ENG_RUS_UTILITIES_HPP
 
-#include <iostream>
+#include <iosfwd>
 #include <set>
 #include <vector>
 #include "Dictionary.hpp"
+
 namespace shkroba
 {
-  Dictionary createFromOneTranslate(const Dictionary& dictionary);
-  Dictionary createCommonDictionary(std::vector< Dictionary >& common);
-  Dictionary createFromUniqueWords(const Dictionary& d1, const Dictionary& d2);
+  Dictionary createFromOneTranslate(const Dictionary &dictionary); // единичные словари
+  Dictionary createCommonDictionary(std::vector<Dictionary> &common); // общие слова
+  Dictionary createFromUniqueWords(const  Dictionary &d1, const Dictionary &d2); // общие уникальеые для двух словарей
 
-  std::ostream& operator<<(std::ostream& out, std::set< std::string >& set);
+  std::ostream &operator<<(std::ostream &out, std::set<std::string> &set);
 
-  void doPrintDictionary(const Dictionary& dictionary, std::ostream& out);
-  void doSize(const Dictionary& dictionary, std::ostream& out);
-  void doFindWord(const Dictionary& dictionary, char letter, std::ostream& out);
-  void doAddWordsFromAnother(Dictionary& source, const Dictionary& extra, std::ostream& out);
-  void doCreateFromOneTranslate(const Dictionary& dictionary, std::ostream& out);
-  void doCreateFromUniqueWords(const Dictionary& source, const Dictionary& extra, std::ostream& out);
-  void doCommonDictionary(const std::vector< Dictionary > &dictionaries, size_t n);
-
-  void help(std::ostream& out);
-  void createTestDictionaries(Dictionary& d1, Dictionary& d2, Dictionary& d3, Dictionary& d4, Dictionary& d5);
-  void testCommandSystem(Dictionary&  d1, Dictionary&  d2, Dictionary&  d3, Dictionary&  d4, Dictionary&  d5);
-
+  void doPrintDictionary(const Dictionary &dictionary, std::ostream &out);
+  void doSize(const Dictionary &dictionary, std::ostream &out);
+  void doFindWord(const Dictionary &dictionary, char letter, std::ostream &out);
+  void doCommonForTwo(const Dictionary &source, const Dictionary &extra, std::ostream &out);
+  void doOneTranslate(const Dictionary &dictionary, std::ostream &out);
+  void doCreateFromUniqueWords(const Dictionary &source, const Dictionary &extra, std::ostream &out);
   std::string nextWord(std::string &str);
   std::vector<Dictionary> createDictionariesFromFile(std::istream &fin);
 }
 #endif
-
-

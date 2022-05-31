@@ -1,13 +1,14 @@
 #include "Dictionary.hpp"
 #include <iterator>
 #include "Utilities.hpp"
+#include <iostream>
+
 
 namespace shkroba
 {
-  Dictionary::Dictionary(const std::string &name)
-  {
-    name_ = name;
-  }
+  Dictionary::Dictionary(const std::string &name) :
+    name_(name)
+  {}
 
   void Dictionary::insert(const std::string &word, const std::string &translate)
   {
@@ -75,7 +76,6 @@ namespace shkroba
         result.push_back(item.first);
       }
     }
-
     for (auto &iter: result)
     {
       out << iter << ' ';
@@ -86,7 +86,7 @@ namespace shkroba
     }
   }
 
-  void Dictionary::addWordsFromAnother(const Dictionary &dictionary)
+  void Dictionary::addWords(const Dictionary &dictionary)
   {
     for (auto &word: dictionary.dictionary_)
     {
@@ -97,15 +97,26 @@ namespace shkroba
     }
   }
 
+  std::string Dictionary::getName() const
+  {
+    return name_;
+  }
+
   std::map<std::string, std::shared_ptr<std::set<std::string> > >::const_iterator Dictionary::begin() const
   {
     return dictionary_.begin();
+  }
+
+  const std::map<std::string, std::shared_ptr<std::set<std::string>>> &Dictionary::getDictionary() const
+  {
+    return dictionary_;
   }
 
   std::map<std::string, std::shared_ptr<std::set<std::string> > >::const_iterator Dictionary::end() const
   {
     return dictionary_.end();
   }
+
 
   std::istream &operator>>(std::istream &in, Dictionary &dictionary)
   {
@@ -141,10 +152,36 @@ namespace shkroba
     name_ = newName;
   }
 
-  std::string Dictionary::getName() const
+  bool Dictionary::operator==(const Dictionary &rhs) const
   {
-    return name_;
+    return this->dictionary_ == rhs.dictionary_;
+  }
+
+  bool Dictionary::operator!=(const Dictionary &rhs) const
+  {
+    return !(*this == rhs);
+  }
+
+  std::map<std::string, std::shared_ptr<std::set<std::string> > >::iterator Dictionary::begin()
+  {
+    return dictionary_.begin();
+  }
+
+  std::map<std::string, std::shared_ptr<std::set<std::string> > >::iterator Dictionary::end()
+  {
+    return dictionary_.end();
+  }
+
+  Dictionary &Dictionary::operator=(Dictionary &&dictionary) noexcept
+  {
+    dictionary_ = std::move(dictionary.dictionary_);
+    name_ = std::move(dictionary.name_);
+    return *this;
+  }
+
+  std::map<std::string, std::shared_ptr<std::set<std::string>>> &Dictionary::getDictionary()
+  {
+    return dictionary_;
   }
 
 };
-
