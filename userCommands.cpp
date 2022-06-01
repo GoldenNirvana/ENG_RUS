@@ -1,8 +1,8 @@
 #include "userCommands.hpp"
 #include <algorithm>
-#include <iomanip>
 #include <functional>
 #include <iostream>
+#include <string>
 #include "Utilities.hpp"
 #include "iofmtguard.hpp"
 #include "Dictionary.hpp"
@@ -16,86 +16,174 @@ namespace
     in >> std::noskipws >> shkroba::DelimiterIO { '\n' };
     return static_cast< bool >(in);
   }
+
+  void getNextWord(std::string& fromStr, std::string& toStr)
+  {
+    size_t closestSpace = fromStr.find_first_of(' ');
+    toStr = fromStr.substr(0, closestSpace);
+    size_t countForDelete = (closestSpace == std::string::npos) ? closestSpace : closestSpace + 1;
+    fromStr.erase(0, countForDelete);
+  }
+
+  struct isName
+  {
+    bool operator()(shkroba::Dictionary& dictionary, std::string name)
+    {
+      return dictionary.getName() == name;
+    }
+  };
 }
 
 namespace shkroba
 {
   using namespace std::placeholders;
 
-  void makePrint(std::istream &in, std::vector< Dictionary > &base, std::ostream &out)
+  void makePrint(std::istream& in, std::vector< Dictionary >& base, std::ostream& out)
   {
-    for (const auto &current: base)
-    {
-      shkroba::iofmtguard iofmtguard(out);
-      shkroba::doPrintDictionary(current, std::cout);
-      out << '\n';
-    }
-  }
-
-  void makeSize(std::istream &in, std::vector< Dictionary > &base, std::ostream &out)
-  {
-    for (const auto &current: base)
-    {
-      shkroba::iofmtguard iofmtguard(out);
-      out << current.getName() <<'\n';
-      shkroba::doSize(current, std::cout);
-      out << '\n';
-    }
-  }
-
-  void makeFindWord(std::istream &in, std::vector< Dictionary > &base, std::ostream &out)
-  {
-    char letter;
-    in >> letter;
+    std::string word;
+    in  >> word;
+    iofmtguard guard(out);
     if (!isTwoWordsInCommand(in))
     {
       throw std::logic_error("<INVALID COMMAND>");
     }
-    for (const auto &current: base)
+    auto iter = std::find_if(base.begin(), base.end(), std::bind(isName(), _1, word));
+    if (iter != base.end())
     {
-      out << current.getName()<<'\n';
       shkroba::iofmtguard iofmtguard(out);
-      shkroba::doFindWord(current, letter,out);
+      shkroba::doPrintDictionary(*iter, out);
       out << '\n';
+    }
+    else
+    {
+      shkroba::iofmtguard iofmtguard(out);
+      out << "No dictionaries with such name" << '\n';
     }
   }
 
-  void makeOneTranslate(std::istream &in, std::vector< Dictionary >& base, std::ostream &out)
+  void makeSize(std::istream& in, std::vector< Dictionary >& base, std::ostream& out)
   {
-    for (const auto &current: base)
+    std::string word;
+    in >> word;
+    iofmtguard guard(out);
+    if (!isTwoWordsInCommand(in))
+    {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+    auto iter = std::find_if(base.begin(), base.end(), std::bind(isName(), _1, word));
+    if (iter != base.end())
     {
       shkroba::iofmtguard iofmtguard(out);
-      shkroba::doOneTranslate(current, out);
+      shkroba::doSize(*iter, out);
       out << '\n';
+    }
+    else
+    {
+      shkroba::iofmtguard iofmtguard(out);
+      out << "No dictionaries with such name" << '\n';
     }
   }
 
-  void makeUnique(std::istream &in, std::vector< Dictionary >& base, std::ostream &out)
+  void makeFindWord(std::istream& in, std::vector< Dictionary >& base, std::ostream& out)
   {
+    std::string string;
+    std::getline(in >> std::ws , string);
+    std::string letter;
+    getNextWord(string, letter);
+    if (letter.size() != 1)
+    {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+    std::string name;
+    getNextWord(string, name);
+    auto iter = std::find_if(base.begin(), base.end(), std::bind(isName(), _1, name));
+    if (iter != base.end())
+    {
+      shkroba::iofmtguard iofmtguard(out);
+      shkroba::doFindWord(*iter, letter, out);
+      out << '\n';
+    }
+    else
+    {
+      shkroba::iofmtguard iofmtguard(out);
+      out << "No dictionaries with such name" << '\n';
+    }
+  }
+
+  void makeOneTranslate(std::istream& in, std::vector< Dictionary >& base, std::ostream& out)
+  {
+    std::string word;
+    in >> word;
+    iofmtguard guard(out);
+    if (!isTwoWordsInCommand(in))
+    {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
+    auto iter = std::find_if(base.begin(), base.end(), std::bind(isName(), _1, word));
+    if (iter != base.end())
+    {
+      shkroba::iofmtguard iofmtguard(out);
+      shkroba::doOneTranslate(*iter, out);
+      out << '\n';
+    }
+    else
+    {
+      shkroba::iofmtguard iofmtguard(out);
+      out << "No dictionaries with such name" << '\n';
+    }
+  }
+
+  void makeUnique(std::istream& in, std::vector< Dictionary >& base, std::ostream& out)
+  {
+    std::string word;
+    in >> word;
+    iofmtguard guard(out);
+    if (!isTwoWordsInCommand(in))
+    {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
     shkroba::Dictionary test;
     in >> test;
-    for (const auto &current: base)
+    auto iter = std::find_if(base.begin(), base.end(), std::bind(isName(), _1, word));
+    if (iter != base.end())
     {
       shkroba::iofmtguard iofmtguard(out);
-      shkroba::doCreateFromUniqueWords(current, test, std::cout);
+      shkroba::doCreateFromUniqueWords(*iter, test, std::cout);
       out << '\n';
+    }
+    else
+    {
+      shkroba::iofmtguard iofmtguard(out);
+      out << "No dictionaries with such name" << '\n';
     }
   }
 
-  void makeCommonForTwo(std::istream &in, std::vector< Dictionary >& base, std::ostream &out)
+  void makeCommonForTwo(std::istream& in, std::vector< Dictionary >& base, std::ostream& out)
   {
+    std::string word;
+    in >> word;
+    iofmtguard guard(out);
+    if (!isTwoWordsInCommand(in))
+    {
+      throw std::logic_error("<INVALID COMMAND>");
+    }
     shkroba::Dictionary test;
     in >> test;
-    for (const auto &current: base)
+    auto iter = std::find_if(base.begin(), base.end(), std::bind(isName(), _1, word));
+    if (iter != base.end())
     {
-      out << current.getName();
       shkroba::iofmtguard iofmtguard(out);
-      shkroba::doCommonForTwo(current, test, std::cout);
+      shkroba::doCommonForTwo(*iter, test, std::cout);
       out << '\n';
+    }
+    else
+    {
+      shkroba::iofmtguard iofmtguard(out);
+      out << "No dictionaries with such name" << '\n';
     }
   }
 
-  void makeCommonDictionary(std::istream &in, std::vector< Dictionary >& base, std::ostream &out)
+  void makeCommonDictionary(std::istream& in, std::vector< Dictionary >& base, std::ostream& out)
   {
     std::string number;
     in >> number;

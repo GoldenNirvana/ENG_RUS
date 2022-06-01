@@ -1,13 +1,13 @@
 #include "Utilities.hpp"
-#include "Dictionary.hpp"
-#include "userCommands.hpp"
 #include <iostream>
 #include <algorithm>
+#include <functional>
 #include <iterator>
+#include "Dictionary.hpp"
+#include "userCommands.hpp"
 
 namespace shkroba
 {
-
   std::ostream &operator<<(std::ostream &out, std::set<std::string> &set)
   {
     for (auto &item: set)
@@ -49,14 +49,19 @@ namespace shkroba
       }
       if (isCommon)
       {
+        std::vector<std::string> vector;
         std::set<std::string> set;
-        for (const auto &translate: translates)
-        {
-          if (translate.second == common.size())
-          {
-            set.insert(translate.first);
-          }
-        }
+        std::transform(translates.begin(), translates.end(), std::inserter(vector, vector.begin()),
+                       [&common](const std::pair<std::string, size_t> &p)
+                       {
+                         if (common.size() == p.second) return p.first;
+                         return std::string();
+                       });
+        vector.erase(std::remove_if(vector.begin(), vector.end(), [](std::string &str)
+        { return str.empty(); }), vector.end());
+        std::transform(vector.begin(), vector.end(), std::inserter(set, set.begin()), [](std::string &str)
+        { return str; });
+
         if (set.empty())
         {
           std::cout << "Write translate for " + pair.first << '\n';
@@ -87,8 +92,8 @@ namespace shkroba
   {
     Dictionary common("common");
     std::set_intersection(d1.getDictionary().begin(), d1.getDictionary().end(), d2.getDictionary().begin(),
-                        d2.getDictionary().end(),
-                        std::inserter(common.getDictionary(), common.getDictionary().begin()));
+                          d2.getDictionary().end(),
+                          std::inserter(common.getDictionary(), common.getDictionary().begin()));
     return common;
   }
 
@@ -98,10 +103,13 @@ namespace shkroba
     std::string name;
     std::cin >> name;
     Dictionary newDictionary(name);
-    std::copy_if(dictionary.begin(), dictionary.end(),
-                 std::inserter(newDictionary.getDictionary(), newDictionary.begin()),
-                 [](const std::pair<std::string, std::shared_ptr<std::set<std::string>>> &pair)
-                 { return pair.second->size() == 1; });
+    std::copy_if(
+      dictionary.begin(),
+      dictionary.end(),
+      std::inserter(newDictionary.getDictionary(), newDictionary.begin()),
+      [](const std::pair<std::string, std::shared_ptr<std::set<std::string> > > &pair)
+      { return pair.second->size() == 1; }
+    );
     return newDictionary;
   }
 
@@ -116,7 +124,7 @@ namespace shkroba
     out << dictionary.size();
   }
 
-  void doFindWord(const Dictionary &dictionary, char letter, std::ostream &out)
+  void doFindWord(const Dictionary &dictionary, std::string letter, std::ostream &out)
   {
     dictionary.findWord(letter, std::cout);
   }
@@ -124,8 +132,12 @@ namespace shkroba
   void doCommonForTwo(const Dictionary &source, const Dictionary &extra, std::ostream &out)
   {
     Dictionary result;
-    std::merge(source.getDictionary().begin(), source.getDictionary().end(), extra.getDictionary().begin(),
-               extra.getDictionary().end(), std::inserter(result.getDictionary(), result.begin()));
+    std::merge(source.getDictionary().begin(),
+               source.getDictionary().end(),
+               extra.getDictionary().begin(),
+               extra.getDictionary().end(),
+               std::inserter(result.getDictionary(), result.begin())
+    );
     result.addWords(source);
     result.addWords(extra);
     result.printDictionary(out);

@@ -14,7 +14,7 @@ namespace
     in.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
   }
   using mapCommandsType =  std::map< std::string, std::function< void() > >;
-  mapCommandsType defineAllCommands(std::istream& in, std::vector<shkroba::Dictionary>& base,std::ostream& out)
+  mapCommandsType defineAllCommands(std::istream& in, std::vector< shkroba::Dictionary >& base, std::ostream& out)
   {
     mapCommandsType mapOfCommands =
       {
@@ -31,18 +31,17 @@ namespace
   }
 }
 
-int main(int argc, char**argv)
+int main(int argc)
 {
-// int main(int argc, char** argv)
+//int main(int argc, char** argv)
 //{
 //  if (argc != 2)
 //  {
 //    std::cerr << "Bad args\n";
 //    return 1;
 //  }
-//  system("chcp 65001");
-  std::ifstream fin("in.txt");
 //  std::ifstream fin(argv[1]);
+  std::ifstream fin("in.txt");
   if (!fin.is_open())
   {
     std::cerr << "File is not open\n";
